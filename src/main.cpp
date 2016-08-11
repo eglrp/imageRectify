@@ -97,11 +97,13 @@ int main(int argc, char** argv)
     if (ok)
     {
         Mat R1, R2, P1, P2, Q;
+        Rect roi1, roi2;
 
         stereoRectify(cameraMatrix1, distCoeffs1,
                       cameraMatrix2, distCoeffs2,
                       imageSize, R, T,
-                      R1, R2, P1, P2, Q);
+                      R1, R2, P1, P2, Q,
+                      CALIB_ZERO_DISPARITY, 1, imageSize, &roi1, &roi2);
 
         Mat rmap[2][2];
         initUndistortRectifyMap(cameraMatrix1, noDist, R1, P1, imageSize, CV_16SC2, rmap[0][0], rmap[0][1]);
@@ -110,6 +112,12 @@ int main(int argc, char** argv)
 
 		boost::filesystem::path dir(savePath);
         boost::filesystem::create_directories(dir);
+
+        Point2i rectCorner1(max(roi1.x, roi2.x), max(roi1.y, roi2.y));
+        Point2i rectCorner2(min(roi1.x + roi1.width, roi2.x + roi2.width),
+                            min(roi1.y + roi1.height, roi2.y + roi2.height));
+        Rect validRoi = Rect(rectCorner1.x, rectCorner1.y,
+                             rectCorner2.x - rectCorner1.x, rectCorner2.y - rectCorner1.y);
 
         for(int i = 0; i < imgCount; i++)
         {            
@@ -125,10 +133,10 @@ int main(int argc, char** argv)
             filenameLeft << savePath << "/image_0/" << std::setw(6) << std::setfill('0') << i << ".png";
             filenameRight << savePath << "/image_1/" << std::setw(6) << std::setfill('0') << i << ".png";
 
-//            rectImgLeft = remapImgLeft(validRoi);
-//            rectImgRight = remapImgRight(validRoi);
-            imwrite(filenameLeft.str(), remapImgLeft);
-            imwrite(filenameRight.str(), remapImgRight);
+            rectImgLeft = remapImgLeft(validRoi);
+            rectImgRight = remapImgRight(validRoi);
+            imwrite(filenameLeft.str(), rectImgLeft);
+            imwrite(filenameRight.str(), rectImgRight);
         }
     }
 
