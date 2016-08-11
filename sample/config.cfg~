@@ -1,0 +1,18 @@
+// Path to your XML-File. It contains the paths to your images.
+imagesXmlLeft = "../sample/imagesL.xml"
+imagesXmlLeft = "../sample/imagesR.xml"
+
+// Path to save the results. The folder will automatically be created.
+savePath = "/home/doom/github/ImageRectify/StereoRect"
+
+// ATTENTION! 
+// Hint: The images at the "images.xml" must be in the same chronological order as the camera intrinsics!
+
+// Path to the intrinsics for the first camera. E.g.: left camera
+ymlIntrinsic1 = "/home/doom/github/ImageRectify/sample/GoPro_left_intrinsics.yml"
+
+// Path to the intrinsics for the first camera. E.g.: right camera
+ymlIntrinsic2 = "/home/doom/github/ImageRectify/sample/GoPro_right_intrinsics.yml"
+
+// Path to the extrinsic calibration for both cameras.
+ymlExtrinsics = "/home/doom/github/ImageRectify/sample/extrinsics.yml"
